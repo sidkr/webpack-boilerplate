@@ -1,7 +1,6 @@
-const webpack = require('webpack')
 const { merge } = require('webpack-merge')
-const common = require('./webpack.common.js')
-const paths = require('./paths')
+
+const common = require('./webpack.common')
 
 module.exports = merge(common, {
   // Set the mode to development or production
@@ -13,7 +12,6 @@ module.exports = merge(common, {
   // Spin up a server for quick development
   devServer: {
     historyApiFallback: true,
-    contentBase: paths.build,
     open: true,
     compress: true,
     hot: true,
@@ -24,19 +22,17 @@ module.exports = merge(common, {
     rules: [
       // Styles: Inject CSS into the head with source maps
       {
-        test: /\.(scss|css)$/,
+        test: /\.(sass|scss|css)$/,
         use: [
           'style-loader',
-          {loader: 'css-loader', options: {sourceMap: true, importLoaders: 1, modules: true }},
-          {loader: 'postcss-loader', options: {sourceMap: true}},
-          {loader: 'sass-loader', options: {sourceMap: true}},
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true, importLoaders: 1, modules: false },
+          },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } },
         ],
       },
-    ]
+    ],
   },
-
-  plugins: [
-    // Only update what has changed on hot reload
-    new webpack.HotModuleReplacementPlugin(),
-  ],
 })
